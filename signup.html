@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Sign Up - Green Theme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Green Theme */
+            --primary-color: #4CAF50; /* Primary Green */
+            --secondary-color: #8BC34A; /* Light Green */
+            --accent-color: #00BCD4; /* Cyan */
+            --text-color: #333;
+            --light-text-color: #666;
+            --background-light: #f7fff7;
+            --background-dark: #e8f5e9;
+            --border-color: #ddd;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-light) 0%, var(--background-dark) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Use min-height to allow vertical scrolling for the longer form */
+            min-height: 100vh; 
+            padding: 40px 0; /* Add padding for breathing room */
+            margin: 0;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* Sign-up Card Container */
+        .signup-container {
+            background-color: #ffffff;
+            padding: 40px 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px var(--shadow-medium);
+            width: 100%;
+            max-width: 480px; /* Slightly wider for more fields */
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .signup-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px var(--shadow-medium);
+        }
+
+        /* Title */
+        h2 {
+            margin-bottom: 35px;
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Form Layout: Two columns for date/age */
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+            flex-grow: 1; /* Allows fields in .form-row to take equal space */
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 17px;
+            color: var(--text-color);
+            background-color: #fcfcfc;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+            outline: none;
+        }
+        
+        /* Specific style adjustment for date/number fields where placeholder is always visible */
+        #age, #dob {
+            padding-top: 20px;
+            padding-bottom: 8px;
+        }
+        .form-group:has(#age) label,
+        .form-group:has(#dob) label {
+            /* Keep label floating permanently for input type="date/number" */
+            top: 5px; 
+            font-size: 12px;
+            color: var(--light-text-color);
+            transform: translateY(0);
+        }
+
+        .input-field::placeholder {
+            color: #aaa;
+            transition: opacity 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+            background-color: #fff;
+        }
+
+        .input-field:focus::placeholder {
+            opacity: 0;
+        }
+
+        /* Floating label effect (standard text/email/password) */
+        .form-group label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text-color);
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+            font-size: 16px;
+            background-color: #fff;
+            padding: 0 5px;
+            z-index: 10; /* Ensure label is above input */
+        }
+
+        .input-field:focus + label,
+        .input-field:not(:placeholder-shown):valid + label, /* Ensure valid is used for required fields */
+        .input-field:not(:placeholder-shown):not([type="date"]):not([type="number"]) + label {
+            top: -10px;
+            font-size: 12px;
+            color: var(--primary-color);
+            transform: translateY(0);
+        }
+
+        /* Password Toggle */
+        .password-group {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--light-text-color);
+            font-size: 18px;
+            transition: color 0.2s ease;
+            z-index: 15;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.7s ease-in-out;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        .btn-submit:hover:before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Loading state for button */
+        .btn-submit.loading {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-submit.loading:before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+        }
+        .btn-submit.loading span {
+            visibility: hidden;
+        }
+
+        @keyframes rotation {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Footer Links */
+        .footer-links {
+            margin-top: 30px;
+            font-size: 15px;
+            color: var(--light-text-color);
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Error Message Styling */
+        .error-message {
+            color: #d9534f;
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: -15px; /* Adjust spacing to pull up next element slightly */
+            text-align: left;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            position: relative;
+            z-index: 20;
+        }
+        .error-message.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Background elements */
+        .background-element {
+            position: absolute;
+            background: var(--secondary-color);
+            opacity: 0.15;
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        .bg-circle-1 { top: 10%; left: 5%; width: 100px; height: 100px; animation-delay: 0s; }
+        .bg-circle-2 { bottom: 20%; right: 10%; width: 150px; height: 150px; background: var(--primary-color); opacity: 0.1; animation-delay: 5s; }
+        .bg-circle-3 { top: 50%; left: 80%; width: 80px; height: 80px; background: var(--accent-color); animation-delay: 10s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        /* Media Query for smaller screens */
+        @media (max-width: 600px) {
+            .signup-container {
+                max-width: 90%;
+                padding: 30px 20px 40px;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-element bg-circle-1"></div>
+    <div class="background-element bg-circle-2"></div>
+    <div class="background-element bg-circle-3"></div>
+
+    <div class="signup-container">
+        <h2>Create Your Account</h2>
+        <form id="signUpForm" onsubmit="event.preventDefault(); validateAndSubmit();">
+            
+            <div class="form-group">
+                <input type="text" id="fullName" name="fullName" class="input-field" placeholder=" " required autocomplete="name">
+                <label for="fullName">Full Name</label>
+                <div id="fullName-error" class="error-message">Please enter your full name.</div>
+            </div>
+
+            <div class="form-group">
+                <input type="email" id="email" name="email" class="input-field" placeholder=" " required autocomplete="email">
+                <label for="email">Email Address</label>
+                <div id="email-error" class="error-message">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group">
+                <input type="tel" id="phone" name="phone" class="input-field" placeholder=" " required autocomplete="tel">
+                <label for="phone">Phone Number</label>
+                <div id="phone-error" class="error-message">Please enter a valid 10-digit phone number.</div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="number" id="age" name="age" class="input-field" placeholder=" " required min="18" max="120">
+                    <label for="age">Age</label>
+                    <div id="age-error" class="error-message">Must be 18 or older.</div>
+                </div>
+
+                <div class="form-group">
+                    <input type="date" id="dob" name="dob" class="input-field" placeholder=" " required>
+                    <label for="dob">Date of Birth</label>
+                    <div id="dob-error" class="error-message">Please select your DOB.</div>
+                </div>
+            </div>
+
+            <div class="form-group password-group">
+                <input type="password" id="password" name="password" class="input-field" placeholder=" " required autocomplete="new-password">
+                <label for="password">Password</label>
+                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                <div id="password-error" class="error-message">Password must be at least 8 characters.</div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitButton">
+                <span>Sign Up</span>
+            </button>
+        </form>
+
+        <div class="footer-links">
+            Already have an account? <a href="#">Sign In</a>
+        </div>
+    </div>
+
+    <script>
+        // --- Element Selectors ---
+        const form = document.getElementById('signUpForm');
+        const submitButton = document.getElementById('submitButton');
+        const fields = {
+            fullName: { element: document.getElementById('fullName'), error: document.getElementById('fullName-error'), validation: (v) => v.length >= 3, msg: 'Full name must be at least 3 characters.' },
+            email: { element: document.getElementById('email'), error: document.getElementById('email-error'), validation: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), msg: 'Please enter a valid email address.' },
+            phone: { element: document.getElementById('phone'), error: document.getElementById('phone-error'), validation: (v) => /^\d{10}$/.test(v), msg: 'Phone number must be exactly 10 digits.' },
+            age: { element: document.getElementById('age'), error: document.getElementById('age-error'), validation: (v) => v >= 18 && v <= 120, msg: 'You must be between 18 and 120.' },
+            dob: { element: document.getElementById('dob'), error: document.getElementById('dob-error'), validation: (v) => v !== '', msg: 'Date of Birth is required.' },
+            password: { element: document.getElementById('password'), error: document.getElementById('password-error'), validation: (v) => v.length >= 8, msg: 'Password must be at least 8 characters.' }
+        };
+
+        // --- Core Functions ---
+        function togglePasswordVisibility() {
+            const passwordField = fields.password.element;
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            
+            const toggleIcon = document.querySelector('.toggle-password');
+            toggleIcon.textContent = type === 'password' ? '👁️' : '🔒'; 
+        }
+
+        function showError(errorElement, message) {
+            errorElement.textContent = message;
+            errorElement.classList.add('visible');
+        }
+
+        function hideError(errorElement) {
+            errorElement.classList.remove('visible');
+        }
+
+        function validateInput(fieldKey) {
+            const field = fields[fieldKey];
+            const value = field.element.value.trim();
+
+            if (field.validation(value)) {
+                hideError(field.error);
+                return true;
+            } else {
+                showError(field.error, field.msg);
+                return false;
+            }
+        }
+
+        // --- Event Listeners for Real-time Feedback ---
+        Object.keys(fields).forEach(key => {
+            fields[key].element.addEventListener('input', () => validateInput(key));
+        });
+
+        // --- Submission Logic ---
+        async function validateAndSubmit() {
+            let formIsValid = true;
+
+            // Run validation for all fields
+            Object.keys(fields).forEach(key => {
+                if (!validateInput(key)) {
+                    formIsValid = false;
+                }
+            });
+
+            if (formIsValid) {
+                submitButton.classList.add('loading');
+                submitButton.setAttribute('disabled', 'true');
+
+                try {
+                    // Simulate API call or form submission delay (2 seconds)
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    alert('🎉 Account created successfully! Welcome aboard!');
+                    // window.location.href = '/dashboard'; // Actual redirect
+
+                } catch (error) {
+                    console.error('Sign-up error:', error);
+                    alert('An error occurred during sign-up. Please try again.');
+                } finally {
+                    submitButton.classList.remove('loading');
+                    submitButton.removeAttribute('disabled');
+                }
+
+            } else {
+                alert('Please correct the highlighted errors before submitting.');
+                // Focus on the first invalid field for better UX
+                const firstInvalid = Object.keys(fields).find(key => !validateInput(key));
+                if(firstInvalid) fields[firstInvalid].element.focus();
+            }
+        }
+    </script>
+</body>
+</html>

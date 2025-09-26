@@ -1,0 +1,554 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Music Therapy – ZenMitra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    /* =========================================================
+       CSS VARIABLES (Light Green Theme)
+       ========================================================= */
+    :root {
+        --primary-green: #3CB371; /* Medium Sea Green (CTA) */
+        --secondary-green: #6AA84F; /* Darker Green for text/icon */
+        --light-green-bg: #EAF7E9; /* Very light background for active/hover/sections */
+        --text-dark: #222;
+        --text-medium: #666;
+        --background-light: #F7FFF7;
+        --accent-blue: #00BCD4;
+    }
+
+    /* --- Global Styles --- */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, var(--background-light), var(--light-green-bg));
+      margin: 0;
+      padding: 0;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px 0;
+      background: var(--primary-green);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      color: white;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .music-container {
+      max-width: 1000px;
+      width: 95%;
+      padding: 0 20px;
+    }
+    
+    /* --- Search Bar --- */
+    .search-bar {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--primary-green);
+    }
+    .search-bar i {
+        color: var(--secondary-green);
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+    .search-bar input {
+        flex-grow: 1;
+        border: none;
+        outline: none;
+        padding: 5px;
+        font-size: 1rem;
+    }
+    
+    /* --- Music Card Styling (Interactive List) --- */
+    .music-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-left: 5px solid transparent;
+      cursor: pointer;
+    }
+    .music-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-left-color: var(--primary-green);
+    }
+    .music-card.playing {
+        border-left-color: var(--secondary-green);
+        background: var(--light-green-bg);
+    }
+
+    .track-info {
+        flex-grow: 1;
+        margin-right: 20px;
+        min-width: 0;
+    }
+    .track-info h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--secondary-green);
+      font-weight: 600;
+    }
+    .track-info p {
+      margin: 2px 0 0;
+      font-size: 0.85rem;
+      color: var(--text-medium);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    /* Hide default audio player elements */
+    .music-card audio {
+        display: none;
+    }
+
+    /* --- Controls Area --- */
+    .track-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-shrink: 0;
+    }
+
+    /* Play/Pause Button */
+    .play-pause-btn {
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        transition: background 0.2s, transform 0.1s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .play-pause-btn:hover {
+        background: var(--link-hover-color);
+    }
+    .play-pause-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Timer Box */
+    .timer {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+    }
+    .timer input {
+      width: 45px;
+      padding: 6px 4px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .timer input:focus {
+        border-color: var(--primary-green);
+    }
+    .timer button {
+      padding: 7px 10px;
+      border: none;
+      border-radius: 8px;
+      background: var(--secondary-green);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-weight: 500;
+    }
+    .timer button:hover {
+      background: var(--link-hover-color);
+    }
+
+    /* --- Back Button --- */
+    .back-btn {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: var(--primary-green);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background 0.2s ease, transform 0.2s;
+    }
+    .back-btn:hover {
+      background: var(--link-hover-color);
+      transform: translateY(-1px);
+    }
+
+    /* --- Media Queries --- */
+    @media (max-width: 600px) {
+        .music-card {
+            flex-wrap: wrap;
+            padding: 15px;
+        }
+        .track-info {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .track-controls {
+            width: 100%;
+            justify-content: space-between;
+        }
+        .timer {
+            flex-grow: 1;
+            justify-content: flex-end;
+        }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎶 ZenMitra Music Therapy</h1>
+  </header>
+
+  <div class="music-container">
+    
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="musicSearch" onkeyup="filterTracks()" placeholder="Search by Raga, frequency, or emotion (e.g., 'sleep')...">
+    </div>
+
+    <div id="musicList">
+        
+        <div class="music-card" data-keywords="raga relaxation stress calm">
+          <div class="track-info">
+            <h2>Raga for Relaxation</h2>
+            <p>Helps calm your mind and reduce stress.</p>
+          </div>
+          <audio controls id="track1">
+            <source src="music1.mp3" type="audio/mpeg">
+            Your browser does not support audio playback.
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track1" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer1" placeholder="Min">
+              <button onclick="setTimer('track1','timer1')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="sleep deep melody soothing">
+          <div class="track-info">
+            <h2>Deep Sleep Melody</h2>
+            <p>Soothing tones to help you sleep peacefully.</p>
+          </div>
+          <audio controls id="track2">
+            <source src="music2.mp3" type="audio/mpeg">
+            Your browser does not support audio playback.
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track2" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer2" placeholder="Min">
+              <button onclick="setTimer('track2','timer2')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="focus booster concentration work study">
+          <div class="track-info">
+            <h2>Focus Booster</h2>
+            <p>Enhances concentration during work or study.</p>
+          </div>
+          <audio controls id="track3">
+            <source src="music3.mp3" type="audio/mpeg">
+            Your browser does not support audio playback.
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track3" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer3" placeholder="Min">
+              <button onclick="setTimer('track3','timer3')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="174 hz deep relaxation tension body healing frequency">
+          <div class="track-info">
+            <h2>174 Hz → Deep Relaxation</h2>
+            <p>Releases tension and promotes deep body relaxation.</p>
+          </div>
+          <audio controls id="track174">
+            <source src="174hz.mp3" type="audio/mpeg">
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track174" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer174" placeholder="Min">
+              <button onclick="setTimer('track174','timer174')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="285 hz morning refresh energy revitalizes healing frequency">
+          <div class="track-info">
+            <h2>285 Hz → Morning Refresh</h2>
+            <p>Boosts energy and revitalizes your body in the morning.</p>
+          </div>
+          <audio controls id="track285">
+            <source src="285hz.mp3" type="audio/mpeg">
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track285" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer285" placeholder="Min">
+              <button onclick="setTimer('track285','timer285')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="396 hz motivation confidence fear release self-confidence healing frequency">
+          <div class="track-info">
+            <h2>396 Hz → Motivation & Confidence</h2>
+            <p>Helps release fear and boost self-confidence.</p>
+          </div>
+          <audio controls id="track396">
+            <source src="396hz.mp3" type="audio/mpeg">
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track396" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer396" placeholder="Min">
+              <button onclick="setTimer('track396','timer396')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="528 hz emotional healing love transformation frequency">
+          <div class="track-info">
+            <h2>528 Hz → Emotional Healing</h2>
+            <p>Known as the “Love frequency” – helps in healing and transformation.</p>
+          </div>
+          <audio controls id="track528">
+            <source src="528hz.mp3" type="audio/mpeg">
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track528" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer528" placeholder="Min">
+              <button onclick="setTimer('track528','timer528')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="639 hz connection harmony relationship improvement healing frequency">
+          <div class="track-info">
+            <h2>639 Hz → Connection & Harmony</h2>
+            <p>Improves relationships and encourages harmony.</p>
+          </div>
+          <audio controls id="track639">
+            <source src="639hz.mp3" type="audio/mpeg">
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track639" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer639" placeholder="Min">
+              <button onclick="setTimer('track639','timer639')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="741 hz focus study aid concentration clarity learning healing frequency">
+          <div class="track-info">
+            <h2>741 Hz → Focus & Study Aid</h2>
+            <p>Helps with concentration, clarity, and learning.</p>
+          </div>
+          <audio controls id="track741">
+            <source src="741hz.mp3" type="audio/mpeg">
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track741" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer741" placeholder="Min">
+              <button onclick="setTimer('track741','timer741')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-card" data-keywords="852 hz meditation inner peace spiritual awareness calmness healing frequency">
+          <div class="track-info">
+            <h2>852 Hz → Meditation & Inner Peace</h2>
+            <p>Deepens spiritual awareness and brings calmness.</p>
+          </div>
+          <audio controls id="track852">
+            <source src="852hz.mp3" type="audio/mpeg">
+          </audio>
+          <div class="track-controls">
+            <button class="play-pause-btn" data-track-id="track852" onclick="togglePlayPause(this)"><i class="fas fa-play"></i></button>
+            <div class="timer">
+              <input type="number" id="timer852" placeholder="Min">
+              <button onclick="setTimer('track852','timer852')">Set Timer</button>
+            </div>
+          </div>
+        </div>
+
+    </div> <a class="back-btn" href="index.html">⬅ Back to Home</a>
+  </div>
+
+  <script>
+    // Variable to track the currently playing audio element globally
+    let currentAudio = null;
+    let timerTimeout = null;
+
+    /**
+     * Toggles play/pause for a track, handling stop/pause for all others.
+     * @param {HTMLElement} buttonElement - The button that was clicked.
+     */
+    function togglePlayPause(buttonElement) {
+        const trackId = buttonElement.dataset.trackId;
+        const audio = document.getElementById(trackId);
+        const card = buttonElement.closest('.music-card');
+
+        // Stop and reset the timer if a track is playing/pausing
+        clearTimeout(timerTimeout);
+
+        if (audio === currentAudio && !audio.paused) {
+            // Case 1: Track is currently playing -> Pause it
+            audio.pause();
+            currentAudio = null;
+            buttonElement.innerHTML = '<i class="fas fa-play"></i>';
+            card.classList.remove('playing');
+        } else {
+            // Case 2: Either a new track or the current track is paused -> Play it
+
+            // Pause and reset the previous track (if any)
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0; // Reset time
+                const prevButton = document.querySelector(`.play-pause-btn[data-track-id="${currentAudio.id}"]`);
+                if (prevButton) {
+                    prevButton.innerHTML = '<i class="fas fa-play"></i>';
+                    prevButton.closest('.music-card').classList.remove('playing');
+                }
+            }
+
+            // Start playing the new track
+            audio.play();
+            currentAudio = audio;
+            buttonElement.innerHTML = '<i class="fas fa-pause"></i>';
+            card.classList.add('playing');
+            
+            // Re-apply the timer if one was previously set for this track
+            const timerInput = document.getElementById('timer' + trackId.replace('track', ''));
+            if (timerInput && timerInput.value > 0) {
+                setTimer(trackId, timerInput.id, true); // Re-set the timer immediately
+            }
+        }
+    }
+
+    /**
+     * Sets a timer to automatically pause the audio.
+     * @param {string} audioId - The ID of the audio element.
+     * @param {string} timerId - The ID of the input element containing minutes.
+     * @param {boolean} [isReplay=false] - True if called internally after a play event.
+     */
+    function setTimer(audioId, timerId, isReplay = false) {
+      const audio = document.getElementById(audioId);
+      const minutes = document.getElementById(timerId).value;
+
+      if (!minutes || minutes <= 0) {
+        if (!isReplay) alert("Please enter a valid number of minutes.");
+        return;
+      }
+
+      // If a timer is already running, clear it
+      if (timerTimeout) {
+          clearTimeout(timerTimeout);
+      }
+      
+      const milliseconds = minutes * 60000;
+
+      if (!isReplay && audio !== currentAudio) {
+          // If setting a timer on a non-playing track, inform the user but don't start the timer yet.
+          // The timer will be set when the track is played in togglePlayPause.
+          alert(`Timer set for ${minutes} minutes on this track. It will begin when you press play.`);
+          return;
+      }
+      
+      if (audio.paused) {
+          if (!isReplay) alert(`Timer set for ${minutes} minutes. Start playing to begin the countdown.`);
+          return;
+      }
+      
+      // Start the actual timer
+      timerTimeout = setTimeout(() => {
+        audio.pause();
+        audio.currentTime = 0;
+        
+        // Update the UI after pause
+        const button = document.querySelector(`.play-pause-btn[data-track-id="${audioId}"]`);
+        if (button) {
+            button.innerHTML = '<i class="fas fa-play"></i>';
+            button.closest('.music-card').classList.remove('playing');
+        }
+        currentAudio = null;
+        alert(`Time's up! The ${audioId} track has been paused after ${minutes} minutes.`);
+      }, milliseconds);
+
+      if (!isReplay) {
+        alert("Timer set for " + minutes + " minutes. Enjoy!");
+      }
+    }
+
+    /**
+     * Filters tracks based on search input (New Feature)
+     */
+    function filterTracks() {
+        const input = document.getElementById('musicSearch');
+        const filter = input.value.toUpperCase();
+        const list = document.getElementById('musicList');
+        const tracks = list.getElementsByClassName('music-card');
+
+        for (let i = 0; i < tracks.length; i++) {
+            const track = tracks[i];
+            const keywords = track.getAttribute('data-keywords').toUpperCase();
+            
+            if (keywords.includes(filter)) {
+                track.style.display = "";
+            } else {
+                track.style.display = "none";
+            }
+        }
+    }
+  </script>
+</body>
+</html>

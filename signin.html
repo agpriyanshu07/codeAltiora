@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Sign In - Green Theme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Green Theme */
+            --primary-color: #4CAF50; /* Primary Green */
+            --secondary-color: #8BC34A; /* Light Green */
+            --accent-color: #00BCD4; /* Cyan (kept for a fresh highlight) */
+            --text-color: #333;
+            --light-text-color: #666;
+            --background-light: #f7fff7; /* Very light green/off-white */
+            --background-dark: #e8f5e9; /* Soft green tint */
+            --border-color: #ddd;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-light) 0%, var(--background-dark) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        /* Sign-in Card Container */
+        .signin-container {
+            background-color: #ffffff;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px var(--shadow-medium);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .signin-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px var(--shadow-medium);
+        }
+
+        /* Title */
+        h2 {
+            margin-bottom: 35px;
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 17px;
+            color: var(--text-color);
+            background-color: #fcfcfc;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: #aaa;
+            transition: opacity 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2); /* Green focus glow */
+            background-color: #fff;
+        }
+
+        .input-field:focus::placeholder {
+            opacity: 0;
+        }
+
+        /* Floating label effect */
+        .form-group label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text-color);
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+            font-size: 16px;
+            background-color: #fff;
+            padding: 0 5px;
+        }
+
+        .input-field:focus + label,
+        .input-field:not(:placeholder-shown) + label {
+            top: -10px;
+            font-size: 12px;
+            color: var(--primary-color);
+            transform: translateY(0);
+        }
+
+        /* Password Toggle */
+        .password-group {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--light-text-color);
+            font-size: 18px;
+            transition: color 0.2s ease;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4); /* Green shadow */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.7s ease-in-out;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        .btn-submit:hover:before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Loading state for button */
+        .btn-submit.loading {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-submit.loading:before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+        }
+        .btn-submit.loading span {
+            visibility: hidden;
+        }
+
+        @keyframes rotation {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Footer Links */
+        .footer-links {
+            margin-top: 30px;
+            font-size: 15px;
+            color: var(--light-text-color);
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Error Message Styling */
+        .error-message {
+            color: #d9534f;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            text-align: left;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .error-message.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Background elements */
+        .background-element {
+            position: absolute;
+            background: var(--secondary-color);
+            opacity: 0.15;
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        .bg-circle-1 { top: 10%; left: 5%; width: 100px; height: 100px; animation-delay: 0s; }
+        .bg-circle-2 { bottom: 20%; right: 10%; width: 150px; height: 150px; background: var(--primary-color); opacity: 0.1; animation-delay: 5s; }
+        .bg-circle-3 { top: 50%; left: 80%; width: 80px; height: 80px; background: var(--accent-color); animation-delay: 10s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-element bg-circle-1"></div>
+    <div class="background-element bg-circle-2"></div>
+    <div class="background-element bg-circle-3"></div>
+
+    <div class="signin-container">
+        <h2>Welcome Back!</h2>
+        <form id="signInForm" onsubmit="event.preventDefault(); validateAndSubmit();">
+            
+            <div class="form-group">
+                <input type="email" id="email" name="email" class="input-field" placeholder=" " autocomplete="email">
+                <label for="email">Email Address</label>
+                <div id="email-error" class="error-message">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group password-group">
+                <input type="password" id="password" name="password" class="input-field" placeholder=" " autocomplete="current-password">
+                <label for="password">Password</label>
+                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                <div id="password-error" class="error-message">Password cannot be empty.</div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitButton">
+                <span>Sign In</span>
+            </button>
+        </form>
+
+        <div class="footer-links">
+            <a href="#">Forgot Password?</a> |
+            <a href="#">Create an Account</a>
+        </div>
+    </div>
+
+    <script>
+        const emailField = document.getElementById('email');
+        const passwordField = document.getElementById('password');
+        const emailError = document.getElementById('email-error');
+        const passwordError = document.getElementById('password-error');
+        const submitButton = document.getElementById('submitButton');
+        const form = document.getElementById('signInForm');
+
+        function togglePasswordVisibility() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            
+            const toggleIcon = document.querySelector('.toggle-password');
+            toggleIcon.textContent = type === 'password' ? '👁️' : '🔒'; 
+        }
+
+        function showError(element, message) {
+            element.textContent = message;
+            element.classList.add('visible');
+        }
+
+        function hideError(element) {
+            element.classList.remove('visible');
+        }
+
+        function validateInput(input, errorElement, validationFn, errorMessage) {
+            if (validationFn(input.value.trim())) {
+                hideError(errorElement);
+                return true;
+            } else {
+                showError(errorElement, errorMessage);
+                return false;
+            }
+        }
+
+        const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const isNotEmpty = (value) => value !== '';
+
+        // Real-time validation feedback
+        emailField.addEventListener('input', () => validateInput(emailField, emailError, isValidEmail, 'Please enter a valid email address.'));
+        passwordField.addEventListener('input', () => validateInput(passwordField, passwordError, isNotEmpty, 'Password cannot be empty.'));
+
+
+        async function validateAndSubmit() {
+            let formIsValid = true;
+
+            // Run initial validation to ensure visual feedback is shown
+            if (!validateInput(emailField, emailError, isValidEmail, 'Please enter a valid email address.')) {
+                formIsValid = false;
+            }
+
+            if (!validateInput(passwordField, passwordError, isNotEmpty, 'Password cannot be empty.')) {
+                formIsValid = false;
+            }
+
+            if (formIsValid) {
+                submitButton.classList.add('loading');
+                submitButton.setAttribute('disabled', 'true');
+
+                try {
+                    // Simulate API call or form submission delay (2 seconds)
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    alert('🎉 Sign-in successful! Redirecting...');
+                    // window.location.href = '/dashboard'; // Actual redirect
+
+                } catch (error) {
+                    console.error('Sign-in error:', error);
+                    alert('An error occurred during sign-in. Please try again.');
+                } finally {
+                    submitButton.classList.remove('loading');
+                    submitButton.removeAttribute('disabled');
+                }
+
+            } else {
+                // Scroll to the first error if necessary for better UX on smaller screens
+                emailField.focus();
+            }
+        }
+    </script>
+</body>
+</html>

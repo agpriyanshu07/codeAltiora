@@ -38,15 +38,19 @@ framework unless explicitly asked — the site's simplicity is deliberate.
 
 ## Deployment
 
-The repo is connected to **Vercel** as a static site, via *two* separate projects that
-both build every push: `code-altiora` and `code-altiora-jf8n` (each under a different
-Vercel account). Every pull request therefore gets two preview deployments, listed in
-a single bot comment that the Vercel app edits in place as each one goes
-Building → Ready. There is no build command — Vercel serves the HTML files as-is,
-which is why the no-build-step constraint above matters in practice.
+The repo is connected to **Vercel** as a static site. There is no build command —
+Vercel serves the HTML files as-is, which is why the no-build-step constraint above
+matters in practice.
 
-If you only need to check one preview, they serve identical content; the duplicate
-project is likely a leftover connection rather than a deliberate second environment.
+Several Vercel projects are connected at once, and the exact set has varied between
+pushes; at least three distinct project IDs have been observed building this repo,
+including two both named `code-altiora` (under different Vercel accounts) plus
+`code-altiora-jf8n`. Each pull request therefore collects multiple preview
+deployments, reported in a single bot comment that the Vercel app edits in place as
+each goes Building → Ready. Treat the previews as interchangeable — they serve
+identical content — and don't rely on any one project name being present. The
+duplication looks like leftover connections rather than deliberate environments; if
+you are tidying this up, do it in the Vercel dashboard, not in the repo.
 
 ## Conventions
 

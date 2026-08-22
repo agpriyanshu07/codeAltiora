@@ -36,6 +36,14 @@ python3 -m http.server 8000
 No install, lint, or test commands exist. Do not add a `package.json`, bundler, or
 framework unless explicitly asked — the site's simplicity is deliberate.
 
+## Deployment
+
+The repo is connected to **Vercel** (project `code-altiora`) as a static site. Every
+pull request gets an automatic preview deployment, and the `Vercel Preview Comments`
+check plus a bot comment with the preview URL appear on the PR. There is no build
+command — Vercel serves the HTML files as-is, which is why the no-build-step
+constraint above matters in practice.
+
 ## Conventions
 
 - **Self-contained pages.** CSS and JS live inline in each page. There is no shared

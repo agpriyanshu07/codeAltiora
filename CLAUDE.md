@@ -38,11 +38,15 @@ framework unless explicitly asked — the site's simplicity is deliberate.
 
 ## Deployment
 
-The repo is connected to **Vercel** (project `code-altiora`) as a static site. Every
-pull request gets an automatic preview deployment, and the `Vercel Preview Comments`
-check plus a bot comment with the preview URL appear on the PR. There is no build
-command — Vercel serves the HTML files as-is, which is why the no-build-step
-constraint above matters in practice.
+The repo is connected to **Vercel** as a static site, via *two* separate projects that
+both build every push: `code-altiora` and `code-altiora-jf8n` (each under a different
+Vercel account). Every pull request therefore gets two preview deployments, listed in
+a single bot comment that the Vercel app edits in place as each one goes
+Building → Ready. There is no build command — Vercel serves the HTML files as-is,
+which is why the no-build-step constraint above matters in practice.
+
+If you only need to check one preview, they serve identical content; the duplicate
+project is likely a leftover connection rather than a deliberate second environment.
 
 ## Conventions
 

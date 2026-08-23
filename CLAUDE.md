@@ -100,3 +100,43 @@ The same care applies to any wellness claim or clinical-sounding copy on the sit
 Existing markup uses `aria-label`, `aria-expanded` (the nav toggle in `index.html`),
 and `aria-labelledby` on sections. Preserve and extend these when touching markup;
 keep new interactive elements keyboard-reachable.
+
+## Design skills (UI/UX Pro Max)
+
+`.claude/skills/` holds the [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
+bundle (v2.13.0, MIT) — seven skills: `ui-ux-pro-max`, `ui-styling`, `design`,
+`design-system`, `brand`, `banner-design`, `slides`. They are vendored, not a
+dependency; there is still no package manager here. The search backend needs
+Python 3:
+
+```
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain style [--json]
+```
+
+Domains: `style`, `palette`, `font`, `ux`, `chart`, `stack`.
+
+Treat the whole directory as **vendored upstream code**. Do not hand-edit it. To
+upgrade, re-run the vendor's installer and take its files wholesale:
+
+```
+npx ui-ux-pro-max-cli init --ai claude --force
+```
+
+If an upgrade conflicts with the committed copy, the newer upstream release wins —
+these files carry no local changes worth preserving. Compiled bytecode under
+`scripts/__pycache__/` is deliberately untracked (`scripts/.gitignore`); do not
+re-add it, or every session that runs the skill leaves a dirty tree.
+
+**This install is project-scoped** — it reaches sessions working in this repo only.
+To use these skills across all repos, install them at user level instead, from a
+Claude Code session on your own machine:
+
+```
+/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
+/plugin install ui-ux-pro-max@ui-ux-pro-max-skill
+```
+
+(Fallback if the plugin install fails: `cd ~ && npx ui-ux-pro-max-cli init --ai claude`.)
+A project-scoped copy takes precedence over a user-level one, so once the global
+install exists, delete `.claude/skills/` here — otherwise this repo stays pinned at
+v2.13.0 while every other project tracks the latest.

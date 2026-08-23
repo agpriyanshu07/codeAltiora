@@ -103,40 +103,22 @@ keep new interactive elements keyboard-reachable.
 
 ## Design skills (UI/UX Pro Max)
 
-`.claude/skills/` holds the [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
-bundle (v2.13.0, MIT) — seven skills: `ui-ux-pro-max`, `ui-styling`, `design`,
-`design-system`, `brand`, `banner-design`, `slides`. They are vendored, not a
-dependency; there is still no package manager here. The search backend needs
-Python 3:
+The [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) bundle
+(MIT) — `ui-ux-pro-max`, `ui-styling`, `design`, `design-system`, `brand`,
+`banner-design`, `slides` — is installed at **account level**, not in this repo.
+It syncs into every session automatically, so it is available here without
+`.claude/skills/` existing. Do not commit a copy back into this repo: a
+project-scoped copy silently overrides the account-level one, which is how this
+project previously ended up pinned to an older release than everything else.
+
+The search backend needs Python 3, and lives wherever the skill is synced:
 
 ```
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain style [--json]
+python3 ~/.claude/skills/synced/ui-ux-pro-max/scripts/search.py "<query>" --domain style [--json]
 ```
 
 Domains: `style`, `palette`, `font`, `ux`, `chart`, `stack`.
 
-Treat the whole directory as **vendored upstream code**. Do not hand-edit it. To
-upgrade, re-run the vendor's installer and take its files wholesale:
-
-```
-npx ui-ux-pro-max-cli init --ai claude --force
-```
-
-If an upgrade conflicts with the committed copy, the newer upstream release wins —
-these files carry no local changes worth preserving. Compiled bytecode under
-`scripts/__pycache__/` is deliberately untracked (`scripts/.gitignore`); do not
-re-add it, or every session that runs the skill leaves a dirty tree.
-
-**This install is project-scoped** — it reaches sessions working in this repo only.
-To use these skills across all repos, install them at user level instead, from a
-Claude Code session on your own machine:
-
-```
-/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
-/plugin install ui-ux-pro-max@ui-ux-pro-max-skill
-```
-
-(Fallback if the plugin install fails: `cd ~ && npx ui-ux-pro-max-cli init --ai claude`.)
-A project-scoped copy takes precedence over a user-level one, so once the global
-install exists, delete `.claude/skills/` here — otherwise this repo stays pinned at
-v2.13.0 while every other project tracks the latest.
+Upgrades happen at the account level (claude.ai → Settings → Capabilities →
+Skills), not through this repo. Replacing an existing entry means deleting it
+first — uploading over a skill of the same name does not overwrite it.
